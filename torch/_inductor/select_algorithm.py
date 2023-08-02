@@ -704,6 +704,10 @@ class AlgorithmSelectorCache(PersistentCache):
     def __call__(self, name, choices: List[ChoiceCaller], input_nodes, layout):
         # TODO(nmacchioni): remove once CI tests are fixed
         choices = [choice for choice in choices if choice is not None]
+
+        # only consider Triton template kernel, exclude external kernel (e.g. cublas)
+        choices = [choice for choice in choices if isinstance(choice, TritonTemplateCaller)]
+
         assert len(choices) > 0, "no choices to select"
 
         if len(choices) == 1:
